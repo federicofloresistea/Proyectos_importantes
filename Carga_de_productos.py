@@ -1,10 +1,11 @@
+# Carga de productos con cálculo de costos, ganancias e impuestos, y generación de archivos Excel y Word
 IVA = 0.21
 GANANCIA = 0.17
 
 productos = []
 
 cantidad_productos = int(input("¿Cuántos productos desea ingresar?: "))
-
+# Cargar los productos y calcular costos, ganancias e impuestos
 for i in range(cantidad_productos):
 
     print(f"\nProducto {i + 1}")
@@ -31,11 +32,11 @@ for i in range(cantidad_productos):
         "ganancia": ganancia,
         "precio_final": precio_final
     }
-
+# Agregar el producto al listado de productos
     productos.append(producto)
 
 print("\nRESUMEN\n")
-
+# Mostrar el resumen de cada producto con su descripción, cantidad, costo total, ganancia y precio final
 for producto in productos:
 
     print("\n----------------")
@@ -94,15 +95,16 @@ libro.save("inventario.xlsx")
 
 print("\nArchivo Excel generado correctamente")
 
-
+# Generar archivo Word con el resumen de productos
 from docx import Document
 
+# Crear un nuevo documento de Word
 documento = Document()
-
+# Agregar un título al documento
 documento.add_heading('Informe Interno de Costos', level=1)
-
+# Agregar un párrafo al documento
 documento.add_paragraph('Detalle de productos cargados:')
-
+# Agregar una tabla al documento con los datos de los productos
 tabla = documento.add_table(rows=1, cols=4)
 
 encabezado = tabla.rows[0].cells
@@ -111,7 +113,7 @@ encabezado[0].text = 'Producto'
 encabezado[1].text = 'Cantidad'
 encabezado[2].text = 'Costo Total'
 encabezado[3].text = 'Ganancia'
-
+# Agregar los datos de cada producto a la tabla 
 for producto in productos:
 
     fila = tabla.add_row().cells
@@ -123,7 +125,7 @@ for producto in productos:
     fila[2].text = str(producto["costo_total"])
 
     fila[3].text = str(producto["ganancia"])
-
+# Agregar un párrafo al documento con el resumen general de costos, ganancias y presupuesto total
 documento.add_paragraph(
     f"\nTotal presupuesto: ${round(total_presupuesto, 2)}"
 )
@@ -135,6 +137,67 @@ documento.add_paragraph(
 documento.add_paragraph(
     f"Ganancia total: ${total_ganancia:,.2f}"
 )
+# Guardar el documento Word
 documento.save("costos.docx")
 
 print("Documento Word generado correctamente")
+
+from reportlab.pdfgen import canvas
+
+pdf = canvas.Canvas("presupuesto.pdf")
+
+# Título
+pdf.setFont("Helvetica-Bold", 16)
+pdf.drawString(50, 800, "PRESUPUESTO")
+
+# Encabezados
+pdf.setFont("Helvetica-Bold", 12)
+
+pdf.drawString(50, 760, "Producto")
+pdf.drawString(250, 760, "Cantidad")
+pdf.drawString(350, 760, "Precio Final")
+
+# Datos
+pdf.setFont("Helvetica", 12)
+
+y = 730
+
+for producto in productos:
+
+    pdf.drawString(
+        50,
+        y,
+        producto["descripcion"]
+    )
+
+    pdf.drawString(
+        250,
+        y,
+        str(producto["cantidad"])
+    )
+
+    pdf.drawString(
+        350,
+        y,
+        f"${producto['precio_final']:,.2f}"
+    )
+
+    y -= 25
+
+# Línea separadora
+pdf.line(50, y, 500, y)
+
+y -= 30
+
+# Total
+pdf.setFont("Helvetica-Bold", 12)
+
+pdf.drawString(
+    50,
+    y,
+    f"TOTAL PRESUPUESTO: ${total_presupuesto:,.2f}"
+)
+
+pdf.save()
+
+print("PDF generado correctamente")
