@@ -142,8 +142,10 @@ documento.save("costos.docx")
 
 print("Documento Word generado correctamente")
 
+# Generar archivo PDF con el resumen de productos
 from reportlab.pdfgen import canvas
 
+# Crear un nuevo archivo PDF
 pdf = canvas.Canvas("presupuesto.pdf")
 
 # Título
@@ -201,3 +203,19 @@ pdf.drawString(
 pdf.save()
 
 print("PDF generado correctamente")
+
+# Generar un nuevo PDF combinando el presupuesto y las condiciones legales
+
+from PyPDF2 import PdfMerger
+
+merger = PdfMerger()
+
+merger.append("presupuesto.pdf")
+
+merger.append("condiciones_legales.pdf")
+
+merger.write("presupuesto_final.pdf")
+
+merger.close()
+
+print("PDF final generado correctamente")
