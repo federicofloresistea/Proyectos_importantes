@@ -57,3 +57,24 @@ for producto in productos:
 
 print("\nTOTAL PRESUPUESTO")
 print(total_presupuesto)
+
+from openpyxl import Workbook
+
+libro = Workbook()
+
+hoja = libro.active
+
+hoja.title = "Inventario"
+
+hoja.append(["Producto", "Cantidad"])
+
+for producto in productos:
+
+    hoja.append([
+        producto["descripcion"],
+        producto["cantidad"]
+    ])
+
+libro.save("inventario.xlsx")
+
+print("\nArchivo Excel generado correctamente")
