@@ -68,6 +68,15 @@ print(f"Costo Total:      ${total_costo:,.2f}")
 print(f"Ganancia Total:   ${total_ganancia:,.2f}")
 print(f"Venta Total:      ${total_presupuesto:,.2f}")
 
+# Generar la carpeta de salida con el resumen de productos, costos, ganancias y presupuesto total
+import os
+
+CARPETA_SALIDA = "salida"
+
+os.makedirs(CARPETA_SALIDA, exist_ok=True)
+
+
+
 # Generar archivo Excel con el resumen de productos
 from openpyxl import Workbook
 
@@ -91,7 +100,7 @@ for producto in productos:
     ])
 
 #guardar el archivo Excel
-libro.save("inventario.xlsx")
+libro.save(f"{CARPETA_SALIDA}/inventario.xlsx")
 
 print("\nArchivo Excel generado correctamente")
 
@@ -138,7 +147,7 @@ documento.add_paragraph(
     f"Ganancia total: ${total_ganancia:,.2f}"
 )
 # Guardar el documento Word
-documento.save("costos.docx")
+documento.save(f"{CARPETA_SALIDA}/costos.docx")
 
 print("Documento Word generado correctamente")
 
@@ -146,7 +155,7 @@ print("Documento Word generado correctamente")
 from reportlab.pdfgen import canvas
 
 # Crear un nuevo archivo PDF
-pdf = canvas.Canvas("presupuesto.pdf")
+pdf = canvas.Canvas(f"{CARPETA_SALIDA}/presupuesto.pdf")
 
 # Título
 pdf.setFont("Helvetica-Bold", 16)
@@ -214,7 +223,7 @@ merger.append("presupuesto.pdf")
 
 merger.append("condiciones_legales.pdf")
 
-merger.write("presupuesto_final.pdf")
+merger.write(f"{CARPETA_SALIDA}/presupuesto_final.pdf")
 
 merger.close()
 

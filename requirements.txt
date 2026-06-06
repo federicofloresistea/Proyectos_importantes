@@ -1,0 +1,20 @@
+dependencies for the project
+
+ openpyxl
+python-docx
+reportlab
+PyPDF2
+ 
+ 
+ 
+ pip freeze
+
+charset-normalizer==3.4.7
+et_xmlfile==2.0.0
+lxml==6.1.1
+openpyxl==3.1.5
+pillow==12.2.0
+PyPDF2==3.0.1
+python-docx==1.2.0
+reportlab==4.5.1
+typing_extensions==4.15.0
