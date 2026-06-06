@@ -51,21 +51,35 @@ for producto in productos:
     print("Precio Final:", producto["precio_final"])
 
 total_presupuesto = 0
+total_costo = 0
+total_ganancia = 0
 
 for producto in productos:
     total_presupuesto += producto["precio_final"]
+    total_costo += producto["costo_total"]
+    total_ganancia += producto["ganancia"]
 
-print("\nTOTAL PRESUPUESTO")
-print(total_presupuesto)
+print("\n==============================")
+print("RESUMEN GENERAL")
+print("==============================")
 
+print(f"Costo Total:      ${total_costo:,.2f}")
+print(f"Ganancia Total:   ${total_ganancia:,.2f}")
+print(f"Venta Total:      ${total_presupuesto:,.2f}")
+
+# Generar archivo Excel con el resumen de productos
 from openpyxl import Workbook
 
+# Crear un nuevo libro de Excel y seleccionar la hoja activa
 libro = Workbook()
 
+#Seleccionar la hoja activa
 hoja = libro.active
 
+#Cambiar el título de la hojade Excel
 hoja.title = "Inventario"
 
+#agregar encabezados a la hoja de Excel
 hoja.append(["Producto", "Cantidad"])
 
 for producto in productos:
@@ -75,6 +89,52 @@ for producto in productos:
         producto["cantidad"]
     ])
 
+#guardar el archivo Excel
 libro.save("inventario.xlsx")
 
 print("\nArchivo Excel generado correctamente")
+
+
+from docx import Document
+
+documento = Document()
+
+documento.add_heading('Informe Interno de Costos', level=1)
+
+documento.add_paragraph('Detalle de productos cargados:')
+
+tabla = documento.add_table(rows=1, cols=4)
+
+encabezado = tabla.rows[0].cells
+
+encabezado[0].text = 'Producto'
+encabezado[1].text = 'Cantidad'
+encabezado[2].text = 'Costo Total'
+encabezado[3].text = 'Ganancia'
+
+for producto in productos:
+
+    fila = tabla.add_row().cells
+
+    fila[0].text = producto["descripcion"]
+
+    fila[1].text = str(producto["cantidad"])
+
+    fila[2].text = str(producto["costo_total"])
+
+    fila[3].text = str(producto["ganancia"])
+
+documento.add_paragraph(
+    f"\nTotal presupuesto: ${round(total_presupuesto, 2)}"
+)
+
+documento.add_paragraph(
+    f"Costo total: ${total_costo:,.2f}"
+)
+
+documento.add_paragraph(
+    f"Ganancia total: ${total_ganancia:,.2f}"
+)
+documento.save("costos.docx")
+
+print("Documento Word generado correctamente")
