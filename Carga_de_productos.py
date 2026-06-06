@@ -219,7 +219,7 @@ from PyPDF2 import PdfMerger
 
 merger = PdfMerger()
 
-merger.append("presupuesto.pdf")
+merger.append(f"{CARPETA_SALIDA}/presupuesto.pdf")
 
 merger.append("condiciones_legales.pdf")
 
@@ -228,3 +228,5 @@ merger.write(f"{CARPETA_SALIDA}/presupuesto_final.pdf")
 merger.close()
 
 print("PDF final generado correctamente")
+
+#fin de codigo
